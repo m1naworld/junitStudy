@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @DataJpaTest // DB와 관련된 컴포넌만 메모리에 로딩
 public class BookRepositoryTest {
@@ -85,7 +86,18 @@ public class BookRepositoryTest {
         assertEquals(author,bookPS.getAuthor());
     }
 
-    // 4. 책 수정
+    // 4. 책 삭제
+    @Test
+    public void 책삭제_test(){
+        // given
+        Long id = 1L;
 
-    // 5. 책 삭제
+        // when
+        bookRepository.deleteById(id);
+
+        // then
+        assertFalse(bookRepository.findById(id).isPresent());
+    }
+
+    // 5. 책 수정
 }
