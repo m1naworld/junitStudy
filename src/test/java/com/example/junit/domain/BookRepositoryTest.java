@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
@@ -72,6 +73,7 @@ public class BookRepositoryTest {
     }
 
     // 3. 책 한 권 조회
+    @Sql("classpath:db/tableInit.sql")
     @Test
     public void 책한권보기_test(){
         // given
@@ -79,7 +81,7 @@ public class BookRepositoryTest {
         String author = "metaCoding";
 
         // when
-        Book bookPS = bookRepository.findById(4L).get();
+        Book bookPS = bookRepository.findById(1L).get();
 
         // then
         assertEquals(title, bookPS.getTitle());
@@ -87,6 +89,7 @@ public class BookRepositoryTest {
     }
 
     // 4. 책 삭제
+    @Sql("classpath:db/tableInit.sql")
     @Test
     public void 책삭제_test(){
         // given
