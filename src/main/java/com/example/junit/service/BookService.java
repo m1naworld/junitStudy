@@ -35,10 +35,21 @@ public class BookService {
 
     // 2. 책 목록 보기
     public List<BookRespDto> getBookList(){
-        return bookRepository.findAll()
+
+        List<BookRespDto> bookRespDtoList = bookRepository.findAll()
                 .stream()
-                .map(new BookRespDto() :: toDto)
+//                .map(new BookRespDto()::toDto) // 기존 코드 오류
+                .map((bookPS) -> new BookRespDto().toDto(bookPS))
                 .collect(Collectors.toList());
+
+        bookRespDtoList.stream().forEach((b) -> {
+            System.out.println("=========================== 본코드");
+            System.out.println(b.getId());
+            System.out.println(b.getTitle());
+            System.out.println(b.getAuthor());
+        });
+
+        return bookRespDtoList;
     }
 
     // 3. 책 한 권 보기
