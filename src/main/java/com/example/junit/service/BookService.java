@@ -8,6 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class BookService {
@@ -22,11 +27,39 @@ public class BookService {
     }
 
     // 2. 책 목록 보기
+    public List<BookRespDto> getBookList(){
+        return bookRepository.findAll()
+                .stream()
+                .map(new BookRespDto() :: toDto)
+                .collect(Collectors.toList());
+    }
 
     // 3. 책 한 권 보기
+    public BookRespDto getBook(Long id){
+        Optional<Book> bookOP = bookRepository.findById(id);
+        if(bookOP.isPresent()){
+            return new BookRespDto().toDto(bookOP.get());
+        }else{
+            throw new RuntimeException("해당 아이디를 찾을 수 없습니다.");
+        }
+    }
 
     // 4. 책 삭제
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void deleteBook(Long id){
+        bookRepository.deleteById(id);
+    }
 
     // 5. 책 수정
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void updateBook(Long id, BookSaveReqDto dto){
+        Optional<Book> bookOP = bookRepository.findById(id);
 
+        if (bookOP.isPresent()){
+            Book bookPS = bookOP.get();
+            bookPS.update(dto.getTitle(), dto.getAuthor());
+        } else{
+            throw new RuntimeException("해당 아이디를 찾을 수 없습니다.");
+        }
+    }
 }
