@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -77,5 +78,23 @@ public class BookServiceTest {
         assertThat(bookRespDtoList.get(1).getTitle()).isEqualTo("spring 강의");
         assertThat(bookRespDtoList.get(1).getAuthor()).isEqualTo("metaCoding2");
 
+    }
+
+    @Test
+    public void 책한권보기_테스트(){
+        // given
+        Long id = 1L;
+        Book book = new Book(1L, "junit 강의", "metaCoding");
+        Optional<Book> bookOP = Optional.of(book);
+
+        // stub
+        when(bookRepository.findById(id)).thenReturn(bookOP);
+
+        // when
+        BookRespDto bookRespDto = bookService.getBook(id);
+
+        // then
+        assertThat(bookRespDto.getTitle()).isEqualTo(book.getTitle());
+        assertThat(bookRespDto.getAuthor()).isEqualTo(book.getAuthor());
     }
 }
